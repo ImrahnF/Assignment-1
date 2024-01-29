@@ -12,7 +12,6 @@ Functions:
 import Game   # Import the Game module
 import Role1  # Import the Role1 module
 import Role2  # Import the Role2 module
-import Role3  # Import SPECIAL RANDOM ROLE module
 
 import random
 
@@ -21,6 +20,31 @@ def start_game():
     # This is the very beginning. It will print the introduction by welcoming the user and starting the game.
     print_introduction()
 
+    # User picks role
+    role = None
+    role_choice = None
+    role_choices = ['1', '2'] # 1 and 2 refer to roles 1 and 2
+
+    print("Input [1] to play as [ROLE]\nInput [2] to play as [ROLE]\n")
+    while role_choice not in role_choices:
+        role_choice = input("-- Please input a role -- \n")
+        
+        if role_choice not in role_choices:
+            print("Invalid input. Please select anything from the specified choices.")
+
+    # Get game ready to start. Initialize everything.
+    role_choice = int(role_choice)
+
+
+    if role_choice == 1:
+        role = Role1.initialize_role()
+    elif role_choice == 2:
+        role = Role2.initialize_role()
+
+    # Game logic
+
+
+    # Game over message
 
 def print_introduction():
     print("""  
