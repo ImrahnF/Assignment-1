@@ -21,6 +21,7 @@ def start_game():
     # This is the very beginning. It will print the introduction by welcoming the user and starting the game.
     print_introduction()
 
+
 def print_introduction():
     print("""  
             ▒▐█▒▐█▒▐█▀▀▒██░░░▒██░░░▒▐█▀▀█▌ 
