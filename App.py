@@ -35,14 +35,15 @@ def start_game():
     # Get game ready to start. Initialize everything.
     role_choice = int(role_choice)
 
-
     if role_choice == 1:
         role = Role1.initialize_role()
     elif role_choice == 2:
         role = Role2.initialize_role()
+    print(("You have picked: " + role["name"] + " as your role! May the odds be in your favour."))
 
     # Game logic
-
+    for i in range(1, 4): # This is the game's main loop in which it runs a challenge 3 times based on the role and challenge #.
+        Game.play_challenge(role, i)
 
     # Game over message
 
