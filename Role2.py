@@ -6,7 +6,6 @@ Each role has attributes such as Strength, Dexterity, Intelligence, and Health.
 
 Functions:
 - initialize_role(): Sets initial values for role attributes.
-- get_attribute_value(attribute): Retrieves the current value of a specific attribute for the role.
 """
 # Role2.py
 import random

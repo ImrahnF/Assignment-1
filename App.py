@@ -7,6 +7,7 @@ It contains functions for starting the game, presenting challenges, and displayi
 Functions:
 - start_game(): Initiates the game and coordinates the overall flow.
 - print_message(message): Prints a message to the user.
+- line(): simply makes a nice line do seperate text
 """
 # variables and imports
 import Game   # Import the Game module
@@ -25,7 +26,7 @@ def start_game():
     role_choice = None
     role_choices = ['1', '2'] # 1 and 2 refer to roles 1 and 2
 
-    print("Input [1] to play as [ROLE]\nInput [2] to play as [ROLE]\n")
+    print_header("Input [1] to play as [ROLE]\nInput [2] to play as [ROLE]")
     while role_choice not in role_choices:
         role_choice = input("-- Please input a role -- \n")
         
@@ -39,20 +40,28 @@ def start_game():
         role = Role1.initialize_role()
     elif role_choice == 2:
         role = Role2.initialize_role()
-    print(("You have picked: " + role["name"] + " as your role! May the odds be in your favour."))
+    print(("You have picked: " + role["name"] + " as your role! May the odds be in your favour.\n"))
 
     # Game logic
     for i in range(1, 4): # This is the game's main loop in which it runs a challenge 3 times based on the role and challenge #.
+        
         Game.play_challenge(role, i)
 
     # Game over message
+def line():
+    print(f"{'─'*30}")
+
+def print_header(title):
+    print(f"{'─'*30}")
+    print(f"{title.upper()}")
+    print(f"{'─'*30}\n")
 
 def print_introduction():
     print("""  
             ▒▐█▒▐█▒▐█▀▀▒██░░░▒██░░░▒▐█▀▀█▌ 
             ▒▐████▒▐█▀▀▒██░░░▒██░░░▒▐█▄▒█▌ 
             ▒▐█▒▐█▒▐█▄▄▒██▄▄█▒██▄▄█▒▐██▄█▌
-            
+
 Welcome to the text adventure!
 Embark on a thrilling quest where you'll choose your role, each with unique attributes. 
 Navigate challenges, roll the dice, and shape your destiny. Will you emerge victorious or succumb to the twists of fate? 
