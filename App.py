@@ -26,7 +26,7 @@ def start_game():
     role_choice = None
     role_choices = ['1', '2'] # 1 and 2 refer to roles 1 and 2
 
-    print_header("Input [1] to play as [ROLE]\nInput [2] to play as [ROLE]")
+    print_header("Input [1] to play as [BARBARIAN]\nInput [2] to play as [WIZARD]")
     while role_choice not in role_choices:
         role_choice = input("-- Please input a role -- \n")
         
@@ -44,7 +44,7 @@ def start_game():
 
     # Game logic
     for i in range(1, 4): # This is the game's main loop in which it runs a challenge 3 times based on the role and challenge #.
-        
+        # play the challenge and show current attributes
         Game.play_challenge(role, i)
 
     # Game over message

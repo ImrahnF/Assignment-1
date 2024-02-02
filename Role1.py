@@ -13,7 +13,7 @@ import random
 def initialize_role():
     # Create a dictionary to store attributes
     role = {
-        'name': 'Role1',
+        'name': 'Barbarian',
         'strength': 2,
         'dexterity': -2,
         'intelligence': 0,
