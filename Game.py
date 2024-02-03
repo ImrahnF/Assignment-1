@@ -16,14 +16,8 @@ L1 = [1, 8] # L[1] and above is Crit loss, and between [0] and [1] is a loss
 C1_RESULT = [-2, -1, 1, 2] # attribute points added or removed: crit loss, loss, win, crit win
 
 # Challenge 2 winning criteria
-W2 = []
-L2 = []
-C2_RESULT = []
 
 # Challenge 3 winning criteria
-W3 = []
-L3 = []
-C3_RESULT = []
 
 # stats
 global stats
@@ -32,13 +26,15 @@ global stats
 
 def play_challenge(role, challenge_number):
     stats = role
-    if role["name"] == "Barbarian":
+    if stats["name"] == "Barbarian":
         # challenge 1 is strength based
         if challenge_number == 1:
-            stats["strength"] += role1_challenge1(challenge_number, role)
+            stats["strength"] += role1_challenge1(challenge_number, stats)
             print_attributes(stats)
         if challenge_number == 2:
-            role1_challenge2(challenge_number, role)
+            result = role1_challenge2(challenge_number, stats)
+            stats["dexterity"] += result[0]
+            stats["intelligence"] += result[1]
             print_attributes(stats)
 
 ############################# Dice Roll #############################
@@ -86,14 +82,8 @@ def determine_outcome1(value):
     else:
         return "Outside specified ranges"
 
-def determine_outcome2():
-    pass
-
-def determine_outcome3():
-    pass
-
 ############################# Challenges #############################
-def role1_challenge1(challenge_number, role):
+def role1_challenge1(challenge_number, stats):
     # starting variables
     hp = 20
     current_roll = 0
@@ -115,8 +105,8 @@ def role1_challenge1(challenge_number, role):
         # calculate damage to deal
         current_roll = roll_dice()
         print(("You rolled a ["+str(current_roll)+"]"))
-        print(("Your strength scaling adds/removes ["+str(role["strength"])+"]"))
-        deal_damage = (current_roll + role["strength"])
+        print(("Your strength scaling adds/removes ["+str(stats["strength"])+"]"))
+        deal_damage = (current_roll + stats["strength"])
         hp -= deal_damage
 
         # visualize damage
@@ -133,34 +123,5 @@ def role1_challenge1(challenge_number, role):
     # return the attribute value to reweard or penalize player
     return outcomes[1]
 
-def role1_challenge2(challenge_number, role):
-    # generate message
-    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
-    symbols = "~!@#$%^&*()_+-=/.,<>?;:[]|`"
-
-    # introduction
-    print_header(f"challenge #{challenge_number} - [Cryptic Conundrum]")
-    print("You stumble upon an ancient script, seemingly a coded message. Your intelligence and dexterity will aid in deciphering it.")
-    print_list(["There is a series of characters and symbols, you must give me the message without the symbols", 
-                "# of symbols scale off of dexterity: [-2] dex = 20% more symbols. [1] dex = 10(%) less symbols",
-                "# of characters scale off of intelligence: [-2] int = ( (5 * roll) * [200%]) chars. [0] int = (5 * roll) + [0%]) chars.\n"])
-
-    # design of challenge introduction
-    print(f"+{'-' * 30}+")
-    print(f"Message: ")
-    print(f"+{'-' * 30}+")     
-
-    # handle gameplay
-
-
-def role1_challenge3(challenge_number):
-    pass
-
-def role2_challenge1(challenge_number):
-    pass
-
-def role2_challenge2(challenge_number):
-    pass
-
-def role2_challenge3(challenge_number):
-    pass
+def role1_challenge2(challenge_number, stats):
+    

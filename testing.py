@@ -1,32 +1,47 @@
 import random
 
-# generate message
-chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
-symbols = "~!@#$%^&*()_+-=/.,<>?;:[]|`"
+# Define character sets
+chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+symbols = "~ #^*_/<>|`"
 
-num_characters = 10
-num_symbols = 5
+# Stats
+roll = 1
+intelligence = 2
+dexterity = 2
 
-decypted_message = ""
-encrypted_message = ""
+# Set the BASE number of characters and symbols
+base_num_characters = 1
+base_num_symbols = 7
 
-# add characters to the message
-for i in range(num_characters):
-    encrypted_message += random.choice(chars)
+# calculate number of characters based off of intelligence attribute
+num_characters = (roll - intelligence) * base_num_characters + 4
 
-# add symbols
-for i in range(num_symbols):
-    encrypted_message += random.choice(symbols)
+# calculate number of symbols based off of dexterity attribute
+if dexterity < 0: 
+    num_symbols = (roll * abs(dexterity)) + 4
+else: 
+    num_symbols = (roll - abs(dexterity)*2) + 4
 
-# shuffle the message and turn it back in to a string
-encrypted_message = list(encrypted_message)
-random.shuffle(encrypted_message)
-encrypted_message = ''.join(encrypted_message)
+# Generate encrypted message
+encrypted_message = ''.join(random.choice(chars) for _ in range(num_characters))
+encrypted_message += ''.join(random.choice(symbols) for _ in range(num_symbols))
 
-# Create a translation table to show decrypted message
-translation_table = str.maketrans("", "", symbols)
-decypted_message = encrypted_message.translate(translation_table)
+# Shuffle the encrypted message
+encrypted_message_list = list(encrypted_message)
+random.shuffle(encrypted_message_list)
+encrypted_message = ''.join(encrypted_message_list)
 
-# finish
-print(encrypted_message)
-print(decypted_message)
+# Decrypt message by removing symbols
+decrypted_message = encrypted_message.translate(str.maketrans("", "", symbols))
+
+# Display results
+print(f"+{'=' * 30}+")
+print(f"Chars: {num_characters}|Symbols: {num_symbols}")
+print("Encrypted Message:", encrypted_message)
+print(f"+{'=' * 30}+")
+
+inp = input("Decode the message: ")
+if inp == decrypted_message:
+    print("YOU WIN")
+else:
+    print("YOU LOSE")
