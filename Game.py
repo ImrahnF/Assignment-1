@@ -99,7 +99,7 @@ def role1_challenge1(challenge_number, role):
     current_roll = 0
     
     # introduction
-    print_header(f"challenge #{challenge_number} - goblin fight")
+    print_header(f"challenge #{challenge_number} - Gladiator Goblin")
     print("Ahh! You meet a slimey goblin. In order to proceed you must defeat this monster! Here is how:")
     print_list(["The damange you deal = (number you roll * strength)", "[0] strength adds/removes nothing", "[-1], [-2] strength lessens that much damage done to the goblin" ,"You have 3 rolls"])
 
@@ -134,17 +134,24 @@ def role1_challenge1(challenge_number, role):
     return outcomes[1]
 
 def role1_challenge2(challenge_number, role):
-    num = 100
+    # generate message
+    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+    symbols = "~!@#$%^&*()_+-=/.,<>?;:[]|`"
 
     # introduction
-    print_header(f"challenge #{challenge_number} - [CHALLENGE NAME]]")
-    print("Introduction")
-    print_list(["Rule", "rule", "rule"])
+    print_header(f"challenge #{challenge_number} - [Cryptic Conundrum]")
+    print("You stumble upon an ancient script, seemingly a coded message. Your intelligence and dexterity will aid in deciphering it.")
+    print_list(["There is a series of characters and symbols, you must give me the message without the symbols", 
+                "# of symbols scale off of dexterity: [-2] dex = 20% more symbols. [1] dex = 10(%) less symbols",
+                "# of characters scale off of intelligence: [-2] int = ( (5 * roll) * [200%]) chars. [0] int = (5 * roll) + [0%]) chars.\n"])
 
     # design of challenge introduction
     print(f"+{'-' * 30}+")
-    print(f"Target: \nSTAT: {num}")
+    print(f"Message: ")
     print(f"+{'-' * 30}+")     
+
+    # handle gameplay
+
 
 def role1_challenge3(challenge_number):
     pass
