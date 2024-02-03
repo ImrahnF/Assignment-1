@@ -28,18 +28,18 @@ global stats
 
 def play_challenge(role, challenge_number):
     stats = role
-    if stats["name"] == "Barbarian":
-        # challenge 1 is strength based
-        if challenge_number == 1:
-            stats["strength"] += role1_challenge1(challenge_number, stats)
-            print_attributes(stats)
-            continue_header()
-        if challenge_number == 2:
-            result = role1_challenge2(challenge_number, stats)
-            stats["dexterity"] += result
-            stats["intelligence"] += result
-            print_attributes(stats)
-            continue_header()
+    # challenge 1 is strength based
+    if challenge_number == 1:
+        stats["strength"] += role1_challenge1(challenge_number, stats)
+        print_attributes(stats)
+        continue_header()
+    if challenge_number == 2:
+        result = role1_challenge2(challenge_number, stats)
+        stats["dexterity"] += result
+        stats["intelligence"] += result
+        print_attributes(stats)
+        continue_header()   
+
 
 ############################# Dice Roll #############################
 def roll_dice():
@@ -75,8 +75,7 @@ def print_list(choices):
 
 ############################# Outcomes #############################
         
-# This is the first [strength] challenge for both roles. Same criteria but different challenges
-
+# This is the first [strength] challenge
 def determine_outcome1(value):
     if value <= W1[0]:
         return ["critical win", ATTRIBUTE_RESULT[3]]
@@ -89,6 +88,7 @@ def determine_outcome1(value):
     else:
         return "Outside specified ranges"
     
+# This is the second [dexterity/intelligence] challenge
 def determine_outcome2(encrypted_message, decrypted_message):
     inp = input("\t→ Decode the message:")
 
@@ -100,7 +100,7 @@ def determine_outcome2(encrypted_message, decrypted_message):
     accuracy_percentage = int((correct_characters / total_characters) * 100)
 
     # Display the result as a percentage
-    print(f"Correct Characters: {correct_characters}/{total_characters} ({accuracy_percentage:.2f}%)\n")
+    print(f"Correct Characters: {correct_characters}/{total_characters} ({accuracy_percentage}%)\n")
 
     if accuracy_percentage >= W2[1]:
         return ["critical win", ATTRIBUTE_RESULT[3]]
@@ -113,6 +113,8 @@ def determine_outcome2(encrypted_message, decrypted_message):
     else:
         return "Outside specified ranges"
 
+def determine_outcome3():
+    pass
 
 ############################# Challenges #############################
 def role1_challenge1(challenge_number, stats):
@@ -208,3 +210,5 @@ def role1_challenge2(challenge_number, stats):
     # return the attribute value to reweard or penalize player
     return outcomes[1]
         
+def role1_challenge3(challenge_number, stats):
+    pass

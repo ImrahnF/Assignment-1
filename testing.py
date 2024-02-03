@@ -1,47 +1,53 @@
 import random
 
-# Define character sets
-chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-symbols = "~ #^*_/<>|`"
-
-# Stats
-roll = 1
 intelligence = 2
-dexterity = 2
+luck = 2
 
-# Set the BASE number of characters and symbols
-base_num_characters = 1
-base_num_symbols = 7
+ranks = {
+    '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
+    'J': 10, 'Q': 10, 'K': 10, 'A': 11
+}
 
-# calculate number of characters based off of intelligence attribute
-num_characters = (roll - intelligence) * base_num_characters + 4
+suits = ['♠', '♥', '♦', '♣']
 
-# calculate number of symbols based off of dexterity attribute
-if dexterity < 0: 
-    num_symbols = (roll * abs(dexterity)) + 4
-else: 
-    num_symbols = (roll - abs(dexterity)*2) + 4
+def print_card(rank, suit):
+    print("+------+") 
+    print(f"| {suit}  {rank} |")
+    print("|      |")
+    print(f"|   {rank}  |")
+    print("|      |")
+    print(f"| {rank}  {suit} |")
+    print("+------+")
 
-# Generate encrypted message
-encrypted_message = ''.join(random.choice(chars) for _ in range(num_characters))
-encrypted_message += ''.join(random.choice(symbols) for _ in range(num_symbols))
+def generate_card():
+    selected_rank = random.choice(list(ranks.keys()))
+    selected_suit = random.choice(suits)
+    rank_value = 0
 
-# Shuffle the encrypted message
-encrypted_message_list = list(encrypted_message)
-random.shuffle(encrypted_message_list)
-encrypted_message = ''.join(encrypted_message_list)
-
-# Decrypt message by removing symbols
-decrypted_message = encrypted_message.translate(str.maketrans("", "", symbols))
-
-# Display results
-print(f"+{'=' * 30}+")
-print(f"Chars: {num_characters}|Symbols: {num_symbols}")
-print("Encrypted Message:", encrypted_message)
-print(f"+{'=' * 30}+")
-
-inp = input("Decode the message: ")
-if inp == decrypted_message:
-    print("YOU WIN")
-else:
-    print("YOU LOSE")
+    # If the selected rank is 'J', 'Q', 'K', or 'A', print the corresponding value
+    if selected_rank in ['J', 'Q', 'K', 'A']:
+        # allow the Ace to be an 11 or 1
+        if selected_rank == 'A':
+            choice = input("Input 1 to use as a [1] | Input anything else to use as an [11]: ")
+            if choice == "1":
+                print("You picked a [1]")
+                #print("Rank value: 1")
+                rank_value = 1
+            else:
+                print("You picked an [11]")
+                #print("Rank value: 11")
+                rank_value = 11
+        # if it's not an Ace, proceed normally
+        else:
+            #print(f"Rank value: {ranks[selected_rank]}")
+            rank_value = ranks[selected_rank]
+    # for every numerical card
+    else:
+        #print(f"Rank value: {selected_rank}")
+        rank_value = ranks[selected_rank]
+    
+    print_card(selected_rank, selected_suit)
+    return [selected_rank, selected_suit, rank_value]
+    
+items = generate_card()
+print(f"Rank: {[items[0]]} || Suit: {items[1]} || Value: {items[2]}")
