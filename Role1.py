@@ -17,7 +17,7 @@ def initialize_role():
         'strength': 2,
         'dexterity': -2,
         'intelligence': 0,
-        'health': 2
+        'luck': 0
     }
 
     return role
