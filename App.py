@@ -42,12 +42,19 @@ def start_game():
         role = Role2.initialize_role()
     print(("You have picked: " + role["name"] + " as your role! May the odds be in your favour.\n"))
 
+    '''
     # Game logic
-    for i in range(1, 4): # This is the game's main loop in which it runs a challenge 3 times based on the role and challenge #.
+    for i in range(0, 4): # This is the game's main loop in which it runs 3 challenges based on the role and challenge #.
         # play the challenge and show current attributes
         Game.play_challenge(role, i)
 
-    # Game over message
+    '''
+
+    Game.play_challenge(role, 3)
+    # now that the 3 games are complete, we can retrieve the information of the game and updated attributes and determine the win/loss
+    FINAL_RESULT = Game.determine_OVERALL()
+    print(role)
+
 def line():
     print(f"{'─'*30}")
 

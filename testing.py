@@ -65,6 +65,9 @@ def play_blackjack():
     goal = 50 # traditional blackjack is 21, but this is my own version of blackjack!
     turns = 5 # the amount of turns to be played
     current_turn = 1
+
+    running = True # for testing purposes
+
     print(f"~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WE ARE CURRENTLY IN TURN #{current_turn}")
 
     # the player and dealer deck
@@ -102,7 +105,7 @@ def play_blackjack():
     print(f"{'─'*30}\n")
 
     # play blackjack!
-    while current_turn <= turns:
+    while running == True:#while current_turn <= turns:
         current_turn += 1
         # deal dealer's card
         roll1 = toss()
@@ -159,6 +162,14 @@ def play_blackjack():
             print(f"Dealer is closer to the goal with {dealer_points} points.")
         else:
             print("Both are equally close to the goal.")
+        break
         
+        '''
+        Note: Determine outcome:
+        - player points == goal, this should be a critical win
+        - dealer points == goal, this should be a critical loss
+        - if player is closer but not equal to goal, then it is a win 
+        - if dealer is closer but not equal to goal, then it is a loss 
+        '''
 
 play_blackjack()

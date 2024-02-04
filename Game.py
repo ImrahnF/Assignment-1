@@ -30,51 +30,27 @@ def play_challenge(role, challenge_number):
     stats = role
     # challenge 1 is strength based
     if challenge_number == 1:
-        stats["strength"] += role1_challenge1(challenge_number, stats)
+        stats["strength"] += challenge1(challenge_number, stats)
         print_attributes(stats)
         continue_header()
+        
     if challenge_number == 2:
-        result = role1_challenge2(challenge_number, stats)
+        result = challenge2(challenge_number, stats)
         stats["dexterity"] += result
         stats["intelligence"] += result
         print_attributes(stats)
-        continue_header()   
-
-
-############################# Dice Roll #############################
-def roll_dice():
-    roll = (random.randint(1, 10))
-    return roll
-
-############################# Headers and Lines #############################
-def continue_header():
-    input("\t→ Input anything to continue:")
-
-def print_header(title):
-    print(f"{'─'*30}", end=f"\n{'='*30}\n")
-    print(f"{title.upper()}")
-    print(f"{'='*30}", end=f"\n{'─'*30}\n\n")
-
-def print_attributes(s):
-    print(f"{'─'*30}")
-    print("~ UPDATED ATTRIBUTES ~")
-    print(f"Name: [{s["name"]}]")
-    print(f"Strength: [{s["strength"]}]")
-    print(f"Dexterity: [{s["dexterity"]}]")
-    print(f"Intelligence: [{s["intelligence"]}]")
-    print(f"{'─'*30}\n")
-
-def outcome_header(title):
-    print(f"{'!'*40}")
-    print(f"{title.upper()}")
-    print(f"{'!'*40}\n")
-
-def print_list(choices):
-    for i, choice in enumerate(choices, start=1):
-        print(f"{i}. {choice}")
+        continue_header()
+    
+    if challenge_number == 3:
+        stats["luck"] += challenge3(challenge_number, stats)
+        print_attributes(stats)
+        continue_header()
 
 ############################# Outcomes #############################
-        
+
+def determine_OVERALL():
+    return "WIN"
+
 # This is the first [strength] challenge
 def determine_outcome1(value):
     if value <= W1[0]:
@@ -117,7 +93,7 @@ def determine_outcome3():
     pass
 
 ############################# Challenges #############################
-def role1_challenge1(challenge_number, stats):
+def challenge1(challenge_number, stats):
     # starting variables
     hp = 20
     current_roll = 0
@@ -157,7 +133,7 @@ def role1_challenge1(challenge_number, stats):
     # return the attribute value to reweard or penalize player
     return outcomes[1]
 
-def role1_challenge2(challenge_number, stats):
+def challenge2(challenge_number, stats):
     # Define character sets
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
     symbols = "~ #^*_/<>|`"
@@ -210,5 +186,38 @@ def role1_challenge2(challenge_number, stats):
     # return the attribute value to reweard or penalize player
     return outcomes[1]
         
-def role1_challenge3(challenge_number, stats):
-    pass
+def challenge3(challenge_number, stats):
+    return 5
+
+############################# Dice Roll #############################
+def roll_dice():
+    roll = (random.randint(1, 10))
+    return roll
+
+############################# Headers and Lines #############################
+def continue_header():
+    input("\t→ Input anything to continue:")
+
+def print_header(title):
+    print(f"{'─'*30}", end=f"\n{'='*30}\n")
+    print(f"{title.upper()}")
+    print(f"{'='*30}", end=f"\n{'─'*30}\n\n")
+
+def print_attributes(s):
+    print(f"{'─'*30}")
+    print("~ UPDATED ATTRIBUTES ~")
+    print(f"Name: [{s["name"]}]")
+    print(f"Strength: [{s["strength"]}]")
+    print(f"Dexterity: [{s["dexterity"]}]")
+    print(f"Intelligence: [{s["intelligence"]}]")
+    print(f"Luck: [{s["luck"]}]")
+    print(f"{'─'*30}\n")
+
+def outcome_header(title):
+    print(f"{'!'*40}")
+    print(f"{title.upper()}")
+    print(f"{'!'*40}\n")
+
+def print_list(choices):
+    for i, choice in enumerate(choices, start=1):
+        print(f"{i}. {choice}")
