@@ -15,7 +15,7 @@ def start_game():
     role_choice = None
     role_choices = ['1', '2'] # 1 and 2 refer to roles 1 and 2
 
-    print_header(f"Input [1] to play as [Jock]\nInput [2] to play as [Smarty Pants]")
+    print_header(f"Input [1] to play as [Jock] who excells at physical challenges\nInput [2] to play as [Smarty Pants] who excells at mind games")
     while role_choice not in role_choices:
         role_choice = input("-- Please input a role -- \n")
         
