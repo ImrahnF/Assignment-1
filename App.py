@@ -1,16 +1,28 @@
+'''
+This is App.py and is the MAIN file that is considered the backbone of the entire game. This is where it begins and ends.
+This file also grabs all the info needed from different Roles, and sends it to Game.py to play a challenge.
+
+print_introduction()
+- This is the very beginning. It will print the introduction by welcoming the user and starting the game.
+
+print_header()
+- this uses a premade design to print a visually appealing header, taking in a string parameter to use in the header
+
+start_game()
+- this simply starts the game and is only ever called once
+
+'''
+
 # variables and imports
 import Game   # Import the Game module
 import Role1  # Import the Role1 module
 import Role2  # Import the Role2 module
 
-import random
-
 # functions
 def start_game():
-    # This is the very beginning. It will print the introduction by welcoming the user and starting the game.
     print_introduction()
 
-    # User picks role
+    # The following are setting variables to allow the user to pick roles
     role = None
     role_choice = None
     role_choices = ['1', '2'] # 1 and 2 refer to roles 1 and 2
@@ -23,8 +35,9 @@ def start_game():
             print("Invalid input. Please select anything from the specified choices.")
 
     # Get game ready to start. Initialize everything.
-    role_choice = int(role_choice)
+    role_choice = int(role_choice) # the choice of the user, used to determine who is being played as
 
+    # initialize the role selected
     if role_choice == 1:
         role = Role1.initialize_role()
     elif role_choice == 2:
@@ -32,18 +45,15 @@ def start_game():
     print(("You have picked: " + role["name"] + " as your role! May the odds be in your favour.\n"))
     
     # Game logic
-    for i in range(0, 4): # This is the game's main loop in which it runs 3 challenges based on the role and challenge #.
-        # play the challenge and show current attributes
+    for i in range(1, 4): # This is the game's main loop in which it runs 3 challenges based on the role and challenge #.
+        # play the challenge
         Game.play_challenge(role, i)
 
     # now that the 3 games are complete, we can retrieve the information of the game and updated attributes and determine the win/loss
-    total_points = sum(value for key, value in role.items() if key != 'name')
-    FINAL_RESULT = Game.determine_OVERALL(total_points)
+    total_points = sum(value for key, value in role.items() if key != 'name') # this is the sum all of the attributes in the selected role
+    FINAL_RESULT = Game.determine_OVERALL(total_points) # this returns WIN or LOSS depending on what was calculated
     print(f"\n{'─'*30}")
     print(f"YOU {FINAL_RESULT} WITH A TOTAL ATTRIBUTE SUM OF [{total_points}]")
-    print(f"{'─'*30}")
-
-def line():
     print(f"{'─'*30}")
 
 def print_header(title):

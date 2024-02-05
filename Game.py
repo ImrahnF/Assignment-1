@@ -1,13 +1,62 @@
+'''
+This is Game.py which handles all the games/challenges and it's logic. This is where most of the work happens in the entire program.
+There are many functions here that work together and are very modular, so adding and removing things are simple.
+
+play_challenge()
+- this takes in 2 parameters pass through the App.py, which passes the selected roll and the round number and uses "global stats" as a placeholder
+- it then updates whatever stat is used in the game
+
+challenge1(), challenge2(), challenge3()
+- these simply play the selected challege and pass through the challenge number and the newly updated "stats" varaible. This returns a value to update the attribute
+
+print_attributes()
+- this is a premade header that simply displays the current values of each attribute
+
+continue_header()
+- just a random header that is an input used to allow the player to continue on their own pace
+
+determine_OVERALL()
+- used to calculate whether the player wins or loses at the end
+
+determine_outcome1(), determine_outcome2(), determine_outcome3()
+- these determine the outcome of each challenge and return what kind of win and how many attribute points to reward
+
+print_header()
+- this is a premade header used to display visually appealing text
+
+print_list()
+- this is a premade header used to display visually appealing listed text
+
+outcome_header()
+- used to print out the outcome of each challenge and the reward
+
+roll_dice()
+- simply rolls a dice and returns the number
+
+print_card()
+- this displays a nice visual of an actual card with the number and suit
+
+generate__random_card()
+- this uses the predefined suits and ranks to generate a random card. It takes in a parameter to determine if it is a player or the program taking the card
+- if its a player, if they pick an Ace, then they are able to pick if it has a value of 1 or 11. if its the program its random
+- it then returns the card information [selected_rank, selected_suit, rank_value]
+
+toss()
+- a special dice roll for only the third challenge. it's range is only 0-1
+
+show_sets()
+- this displays the sets the player and dealer have, and allows for them to see the total value of their cards (which is important)
+'''
 import random
 ATTRIBUTE_RESULT = [-2, -1, 1, 2] # attribute points added or removed: crit loss, loss, win, crit win
 
-# stats
+# this is a placeholder for the "Role" selected back in App.py
 global stats
 
 ############################# PLAY CHALLENGE #############################
 
 def play_challenge(role, challenge_number):
-    stats = role
+    stats = role # placeholder role
     # challenge 1 is strength based
     if challenge_number == 1:
         stats["strength"] += challenge1(challenge_number, stats)
@@ -48,7 +97,7 @@ def determine_outcome1(value):
         return "Outside specified ranges"    
 # This is the second [dexterity/intelligence] challenge
 def determine_outcome2(encrypted_message, decrypted_message):
-    inp = input("\t→ Decode the message:")
+    inp = input("\t→ Decode the message:") # this allows the user to move at their own pace
 
     # Count the number of correct characters
     correct_characters = sum(char1 == char2 for char1, char2 in zip(inp, decrypted_message))
@@ -119,6 +168,8 @@ def challenge1(challenge_number, stats):
         current_roll = roll_dice()
         print(("You rolled a ["+str(current_roll)+"]"))
         print(("Your strength scaling adds/removes ["+str(stats["strength"])+"]\n"))
+
+        # calculate damage to deal and deal it
         deal_damage = (current_roll + stats["strength"])
         hp -= deal_damage
 
@@ -129,7 +180,7 @@ def challenge1(challenge_number, stats):
         print(f"+{'=' * 30}+\n")
 
     # win/loss system
-    outcomes = determine_outcome1(hp)
+    outcomes = determine_outcome1(hp) # this returns the outcome (eg. "critical win") and attribute points to be rewarded
     outcome = f"{outcomes[0]} ~ [{outcomes[1]}] strength attribute point(s)"
     outcome_header(outcome)
 
@@ -137,7 +188,7 @@ def challenge1(challenge_number, stats):
     return outcomes[1]
 ########################################################### CHALLENGE 2 ###########################################################
 def challenge2(challenge_number, stats):
-    # Define character sets
+    # Define character sets to be used
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
     symbols = "~ #^*_/<>|`"
 
@@ -152,7 +203,7 @@ def challenge2(challenge_number, stats):
                 "Spaces do not count as a character.\n"])
 
     input("Input anything to roll the dice and generate the message: ")
-    roll = roll_dice()
+    roll = roll_dice() # rolls the dice
 
     # calculate number of characters based off of intelligence attribute
     num_characters = (roll - stats["intelligence"]) + 4
@@ -190,11 +241,13 @@ def challenge2(challenge_number, stats):
     # return the attribute value to reweard or penalize player
     return outcomes[1]
 ########################################################### CHALLENGE 3 ###########################################################
+# card ranks
 ranks = {
     '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
     'J': 10, 'Q': 10, 'K': 10, 'A': 11
 }
 
+# card suits, simply used for the visuals
 suits = ['♠', '♥', '♦', '♣']
 
 def print_card(rank, suit):
@@ -207,9 +260,9 @@ def print_card(rank, suit):
     print("+------+")
 
 def generate__random_card(dealer): # dealer == False means its a player and we allow player to chose. If it's True, just pick either 1 or 11
-    selected_rank = random.choice(list(ranks.keys())) # this is simply visual
-    selected_suit = random.choice(suits)
-    rank_value = 0
+    selected_rank = random.choice(list(ranks.keys())) # selects random rank
+    selected_suit = random.choice(suits) # selects random suit
+    rank_value = 0 # a placeholder value for the selected card's value
 
     # If the selected rank is 'J', 'Q', 'K', or 'A', print the corresponding value
     if selected_rank in ['J', 'Q', 'K', 'A']:
@@ -249,10 +302,10 @@ def challenge3(challenge_number, stats):
     # starting values
     goal = 40 # traditional blackjack is 21, but this is my own version of blackjack!
     turns = 5 # the amount of turns to be played
-    current_turn = 1
-    luck = stats["luck"]
+    current_turn = 1 # the current turn
+    luck = stats["luck"] # grab the luck attribute and make it its own variable for easy access
 
-    running = True # for testing purposes
+    running = True # determines if the game should continue or not
 
     # the player and dealer deck
     player_set = []
@@ -307,13 +360,14 @@ def challenge3(challenge_number, stats):
     # play blackjack!
     while running == True:
         current_turn += 1
+
         # deal dealer's card
         roll1 = toss()
         print(f"{'❖'*30}")
         if roll1 == 0:
             print(f"Dealer tossed the dice and got a [{roll1}]. He holds...")
         else:
-            next = generate__random_card(True) # since he hits, he takes the random card
+            next = generate__random_card(True) # since he hits, he takes the NEXT random card
             print(f"Dealer tossed the dice and got a [{roll1}]. He hits a {next[0]} of {next[1]} and adds it to his deck")
             dealer_set.append(next)
             show_sets()
@@ -326,7 +380,7 @@ def challenge3(challenge_number, stats):
         if roll2 == 0:
             print(f"→ You tossed the dice and got a [{roll2}]. You hold...")
         else:
-            next = generate__random_card(False)
+            next = generate__random_card(False) # generate a random card, allows the user to view it provided they have enough luck points
             print(f"→ You tossed the dice and got a [{roll2}]!\n")
             if luck >= 2:
                 # Player is lucky, they can view the next card
@@ -356,7 +410,7 @@ def challenge3(challenge_number, stats):
             show_sets()
             input(f"\t→ Input anything to proceed to turn #{(current_turn+1)}\n")
         else:
-            running = False
+            running = False # essentially closes the challenge
 
     # win/loss system
     outcomes = determine_outcome3(goal, player_set, dealer_set)

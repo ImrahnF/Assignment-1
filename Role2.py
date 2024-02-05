@@ -1,3 +1,9 @@
+'''
+Role2.py is the second role. It simply contains the hardcoded values, and the sum of all attributes equate to roughly 0 to keep it fair.
+
+initialize_role()
+- pretty much returns the role to allow the user to use it
+'''
 import random
 
 def initialize_role():
