@@ -4,7 +4,6 @@ Role2.py is the second role. It simply contains the hardcoded values, and the su
 initialize_role()
 - pretty much returns the role to allow the user to use it
 '''
-import random
 
 def initialize_role():
     # Create a dictionary to store attributes
