@@ -68,8 +68,6 @@ def play_blackjack():
 
     running = True # for testing purposes
 
-    print(f"~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WE ARE CURRENTLY IN TURN #{current_turn}")
-
     # the player and dealer deck
     player_set = []
     dealer_set = []
@@ -77,6 +75,12 @@ def play_blackjack():
     # the dice roll for this specific gamemode
     def toss():
         return random.randint(0, 1) # 0 = hold, 1 = hit
+    
+    def show_sets():
+        print(f"{'─'*40}")
+        print(f"→ You have [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}].")
+        print(f"→ Dealer has [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}].")
+        print(f"{'─'*40}\n")
 
     # initialize the game before playing
     if luck >= 1:
@@ -91,25 +95,24 @@ def play_blackjack():
     # add the 2 cards for the dealer's deck
     dealer_set.append(generate__random_card(True))
     dealer_set.append(generate__random_card(True))
-
-    #print(f"Rank: {player_set[0]['Rank']} | Suit: {player_set[0]['Suit']} | Value: {player_set[0]['Value']}")
     
     print(f"{'─'*30}")
     print(f"Welcome to twisted Blackjack! The rules are different here..\nYou have [{luck}] luck points.")
-    print(f"{'─'*30}\nHere is your starting deck:")
-    print(player_set, "\n")
+    print(f"{'─'*30}")
 
     # Summing the third item of each dictionary to get total value of cards
-    print(f"You start with [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}]")
+    print(f"→ You start with [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}]")
     print(f"Dealer starts with [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}]")
     print(f"{'─'*30}\n")
 
+    input("\t→ Input anything to start: ")
+
     # play blackjack!
-    while running == True:#while current_turn <= turns:
+    while running == True:
         current_turn += 1
         # deal dealer's card
         roll1 = toss()
-        print(f"{'~'*30}")
+        print(f"{'❖'*30}")
         if roll1 == 0:
             print(f"Dealer tossed the dice and got a [{roll1}]. He holds...")
         else:
@@ -117,11 +120,13 @@ def play_blackjack():
             print(f"Dealer tossed the dice and got a [{roll1}]. He hits a {next[0]} of {next[1]} and adds it to his deck")
             dealer_set.append(next)
             print(dealer_set)
-            print(f"Dealer now has [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}]")
-        print(f"{'~'*30}\n")
+            show_sets()
+        print(f"{'❖'*30}\n")
 
         # deal player's card
         roll2 = toss()
+        input("\t→ Input anything to toss your dice: ")
+        print(f"{'❖'*30}")
         if roll2 == 0:
             print(f"→ You tossed the dice and got a [{roll2}]. You hold...")
         else:
@@ -138,38 +143,38 @@ def play_blackjack():
                     # player hits
                     print(f"→ You hit!")
                     player_set.append(next)
-                    print(f"You now have [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}]")
                 else:
                     # player gives to dealer
                     print("→ You gave the card to the dealer.\n")
                     dealer_set.append(next)
-                    print(f"Dealer now has [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}]")
             else:
                 # not enough luck, play normally
                 print(f"→ You tossed the dice and got a [{roll2}]. You hit.")
                 player_set.append(next)
-                print(f"You now have [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}]")
-        
-        # determine if it's a win, loss, tie, or continue playing.
-        # here we determine the difference. closer to the goal is a win, but over is a lose
-        player_points = abs(goal - sum(item[2] for item in player_set))
-        dealer_points = abs(goal - sum(item[2] for item in dealer_set))
+        print(f"{'❖'*30}\n")
 
-        # Determine who is closer to the goal
-        if player_points < dealer_points:
-            print(f"You are closer to the goal with {player_points} points.")
-        elif dealer_points < player_points:
-            print(f"Dealer is closer to the goal with {dealer_points} points.")
+        if current_turn < turns:
+            # we have more turns, loop back
+            print(f"{'─'*30}")
+            print(f"~~~~ End of turn #{current_turn} ~~~~")
+            show_sets()
+            input(f"\t→ Input anything to proceed to turn #{(current_turn+1)}\n")
         else:
-            print("Both are equally close to the goal.")
-        break
+            running = False
+
+    # determine if it's a win, loss, tie, or continue playing.
+    # here we determine the difference. closer to the goal is a win, but over is a lose
+    player_points = abs(goal - sum(item[2] for item in player_set))
+    dealer_points = abs(goal - sum(item[2] for item in dealer_set))
         
-        '''
-        Note: Determine outcome:
-        - player points == goal, this should be a critical win
-        - dealer points == goal, this should be a critical loss
-        - if player is closer but not equal to goal, then it is a win 
-        - if dealer is closer but not equal to goal, then it is a loss 
-        '''
+    # Determine who is closer to the goal
+    if player_points < dealer_points:
+         print(f"You are closer to the goal with {player_points} points.")
+    elif dealer_points < player_points:
+        print(f"Dealer is closer to the goal with {dealer_points} points.")
+    else:
+        print("Both are equally close to the goal.")
+
+    print("GAME COMPLETED")
 
 play_blackjack()

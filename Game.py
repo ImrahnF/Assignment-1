@@ -1,25 +1,5 @@
-"""
-Game Module
-
-This module contains the game logic for the adventure game. It includes functions for playing challenges, determining outcomes, and managing role attributes.
-
-Functions:
-- play_challenge(role, challenge_number, print_function): Executes a challenge for the given role and prints relevant information.
-- determine_outcome(roll_value, attribute_value): Determines the outcome based on the roll value and role attribute.
-- update_attributes(role, outcome): Updates role attributes based on the outcome of a challenge.
-"""
 import random
 ATTRIBUTE_RESULT = [-2, -1, 1, 2] # attribute points added or removed: crit loss, loss, win, crit win
-
-# Challenge 1 winning criteria
-W1 = [-8, 0] # W[0] and below is Crit win, and between [0] and [1] is a win
-L1 = [1, 8] # L[1] and above is Crit loss, and between [0] and [1] is a loss
-
-# Challenge 2 winning criteria
-W2 = [100, 75] # W[1] and above is Crit win, and between [0] and [1] is a win
-L2 = [50, 25] # L[1] and below is loss, and between [0] and [1] is a loss
-
-# Challenge 3 winning criteria
 
 # stats
 global stats
@@ -48,22 +28,24 @@ def play_challenge(role, challenge_number):
 
 ############################# Outcomes #############################
 
-def determine_OVERALL():
-    return "WIN"
+def determine_OVERALL(sum):
+    if sum >= 0:
+        return "WIN"
+    else:
+        return "LOSE"
 
 # This is the first [strength] challenge
 def determine_outcome1(value):
-    if value <= W1[0]:
+    if value <= -8:
         return ["critical win", ATTRIBUTE_RESULT[3]]
-    elif W1[0] < value <= W1[1]:
+    elif -8 < value <= 0:
         return ["win", ATTRIBUTE_RESULT[2]]
-    elif L1[0] <= value < L1[1]:
+    elif 1 <= value < 8:
         return ["loss", ATTRIBUTE_RESULT[1]]
-    elif value >= L1[1]:
+    elif value >= 8:
         return ["critical loss", ATTRIBUTE_RESULT[0]]
     else:
-        return "Outside specified ranges"
-    
+        return "Outside specified ranges"    
 # This is the second [dexterity/intelligence] challenge
 def determine_outcome2(encrypted_message, decrypted_message):
     inp = input("\t→ Decode the message:")
@@ -78,21 +60,45 @@ def determine_outcome2(encrypted_message, decrypted_message):
     # Display the result as a percentage
     print(f"Correct Characters: {correct_characters}/{total_characters} ({accuracy_percentage}%)\n")
 
-    if accuracy_percentage >= W2[1]:
+    if accuracy_percentage >= 75:
         return ["critical win", ATTRIBUTE_RESULT[3]]
-    elif W2[1] > accuracy_percentage >= L2[0]:
+    elif 75 > accuracy_percentage >= 50:
         return ["win", ATTRIBUTE_RESULT[2]]
-    elif L2[0] > accuracy_percentage >= L2[1]:
+    elif 50 > accuracy_percentage >= 25:
         return ["loss", ATTRIBUTE_RESULT[1]]
-    elif accuracy_percentage < L2[1]:
+    elif accuracy_percentage < 25:
         return ["critical loss", ATTRIBUTE_RESULT[0]]
     else:
         return "Outside specified ranges"
 
-def determine_outcome3():
-    pass
+def determine_outcome3(goal, player_set, dealer_set):
+    # determine if it's a win, loss, tie, or continue playing.
+    # here we determine the difference. closer to the goal is a win, but over is a lose
+    player_points = abs(goal - sum(item[2] for item in player_set))
+    dealer_points = abs(goal - sum(item[2] for item in dealer_set))
+        
+    # Determine who is closer to the goal
+    if player_points < dealer_points:
+         print(f"You are closer to the goal by [{player_points}] points.")
+         if player_points <= 5:
+             # difference is 5 or less, therefore critical win
+            return ["critical win", ATTRIBUTE_RESULT[3]]
+         else:
+             # difference is greater than 5, therefore regular win
+             return ["win", ATTRIBUTE_RESULT[2]]
+    elif dealer_points < player_points:
+        print(f"Dealer is closer to the goal by {dealer_points} points.")
+        if dealer_points <= 5:
+            # dealer is 5 or less away from goal, therefore ciritical loss
+            return ["critical loss", ATTRIBUTE_RESULT[0]]
+        else:
+            # over 5 points away, regular loss
+            return ["loss", ATTRIBUTE_RESULT[1]]
+    else:
+        print("Both are equally close to the goal.")
+        return ["tie", 0] # if it's a tie, just leave as is
 
-############################# Challenges #############################
+########################################################### CHALLENGE 1 ###########################################################
 def challenge1(challenge_number, stats):
     # starting variables
     hp = 20
@@ -101,12 +107,9 @@ def challenge1(challenge_number, stats):
     # introduction
     print_header(f"challenge #{challenge_number} - Gladiator Goblin")
     print("Ahh! You meet a slimey goblin. In order to proceed you must defeat this monster! Here is how:")
-    print_list(["The damange you deal = (number you roll * strength)", "[0] strength adds/removes nothing", "[-1], [-2] strength lessens that much damage done to the goblin" ,"You have 3 rolls"])
-
-    # design of goblin introduction
-    print(f"+{'-' * 30}+")
-    print(f"Enemy: Goblin\nHealth: {hp}")
-    print(f"+{'-' * 30}+")     
+    print_list(["The damange you deal = (number you roll * strength)", "[0] strength adds/removes nothing", 
+                "[-1], [-2] strength lessens that much damage done to the goblin" ,
+                "You have 3 rolls, each roll can be within a range of 1-10"])
 
     # handle gameplay
     for i in range(1, 4):
@@ -132,7 +135,7 @@ def challenge1(challenge_number, stats):
 
     # return the attribute value to reweard or penalize player
     return outcomes[1]
-
+########################################################### CHALLENGE 2 ###########################################################
 def challenge2(challenge_number, stats):
     # Define character sets
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
@@ -142,7 +145,8 @@ def challenge2(challenge_number, stats):
     print_header(f"challenge #{challenge_number} - [Cryptic Conundrum]")
     print("You stumble upon an ancient script, seemingly a coded message. Your intelligence and dexterity will aid in deciphering it.")
     print_list(["There is a series of characters and symbols, you must give me the message without the symbols",
-                "# of symbols scale off of dexterity | # of characters scale off of intelligence",
+                "Each roll can be wihtin the range of 1-11",
+                "# of symbols scale off of dexterity and roll# | # of characters scale off of intelligence and roll#",
                 "Your job is to input every NUMBER (0-9) and LETTER (Aa-Zz) you see IN ORDER. Do this correctly and you win!",
                 "Do NOT input any symbols (~ #^*_/<>|`).",
                 "Spaces do not count as a character.\n"])
@@ -185,10 +189,182 @@ def challenge2(challenge_number, stats):
 
     # return the attribute value to reweard or penalize player
     return outcomes[1]
-        
-def challenge3(challenge_number, stats):
-    return 5
+########################################################### CHALLENGE 3 ###########################################################
+ranks = {
+    '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
+    'J': 10, 'Q': 10, 'K': 10, 'A': 11
+}
 
+suits = ['♠', '♥', '♦', '♣']
+
+def print_card(rank, suit):
+    print("+------+") 
+    print(f"| {suit}  {rank} |")
+    print("|      |")
+    print(f"|   {rank}  |")
+    print("|      |")
+    print(f"| {rank}  {suit} |")
+    print("+------+")
+
+def generate__random_card(dealer): # dealer == False means its a player and we allow player to chose. If it's True, just pick either 1 or 11
+    selected_rank = random.choice(list(ranks.keys())) # this is simply visual
+    selected_suit = random.choice(suits)
+    rank_value = 0
+
+    # If the selected rank is 'J', 'Q', 'K', or 'A', print the corresponding value
+    if selected_rank in ['J', 'Q', 'K', 'A']:
+        # allow the Ace to be an 11 or 1 if its a player's card
+        if selected_rank == 'A':
+            if dealer == False:
+                choice = input("\nYou picked up an Ace! Input 1 to use as a [1] | Input anything else to use as an [11]: ")
+                if choice == "1":
+                    print("You picked a [1]")
+                    #print("Rank value: 1")
+                    rank_value = 1
+                else:
+                    print("You picked an [11]")
+                    #print("Rank value: 11")
+                    rank_value = 11
+            else:
+                # it's the dealer's card so they pick a random value for Ace
+                x = random.randint(0, 1)
+                if x == 0:
+                    rank_value = 1
+                else:
+                    rank_value = 11
+
+        # if it's not an Ace, proceed normally
+        else:
+            #print(f"Rank value: {ranks[selected_rank]}")
+            rank_value = ranks[selected_rank]
+    # for every numerical card
+    else:
+        #print(f"Rank value: {selected_rank}")
+        rank_value = ranks[selected_rank]
+    
+    # print_card(selected_rank, selected_suit)
+    return [selected_rank, selected_suit, rank_value]
+
+def challenge3(challenge_number, stats):
+    # starting values
+    goal = 40 # traditional blackjack is 21, but this is my own version of blackjack!
+    turns = 5 # the amount of turns to be played
+    current_turn = 1
+    luck = stats["luck"]
+
+    running = True # for testing purposes
+
+    # the player and dealer deck
+    player_set = []
+    dealer_set = []
+
+    # the dice roll for this specific gamemode
+    def toss():
+        return random.randint(0, 1) # 0 = hold, 1 = hit
+    
+    def show_sets():
+        print(f"{'─'*40}")
+        print(f"→ You have [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}].")
+        print(f"→ Dealer has [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}].")
+        print(f"{'─'*40}\n")
+
+    # introduction
+    print_header(f"challenge #{challenge_number} - [Mystical Forty]")
+    print("You have been trapped by a renown trickster. You are tasks with competing against him in his very own version of Blackjack! Here are the rules:")
+    print_list(["Both you and the trickster (dealer) have cards that add up to 40", 
+                "K, Q, J are valued at 10 points, the Ace card is valued at your choice of 1 or 11 points." ,
+                "You both start with 2 cards and play 5 rounds",
+                "The person at the end of the 5 rounds closer to 40 wins!",
+                "Your dice roll is ranged from 0-1. If someone rolls a [1], they hit (take the next card). If a [0] is rolled, then you hold on to your deck",
+                "[1+] luck gives you a lucky Ace to start off with. You can pick to have it value at 1 or 11",
+                "[2+] luck allows for the previous, as well as 'cheating' in which you are able to peek the next card and chose to keep it or give it to the dealer."])
+
+    # initialize the game before playing
+    if luck >= 1:
+       # if luck is 1+, simply add bonus card + random card. (2+ allows higher chance to 'peek' the next card)
+       player_set.append(['A', '♠', 11])
+       player_set.append(generate__random_card(False))
+    else:
+        # any other amount generates a random starting set of 2
+        player_set.append(generate__random_card(False))
+        player_set.append(generate__random_card(False))
+
+    # add the 2 cards for the dealer's deck
+    dealer_set.append(generate__random_card(True))
+    dealer_set.append(generate__random_card(True))
+    
+    print(f"{'─'*30}")
+    print(f"Welcome to twisted Blackjack! The rules are different here..\nYou have [{luck}] luck points.")
+    print(f"{'─'*30}")
+
+    # Summing the third item of each dictionary to get total value of cards
+    print(f"→ You start with [{len(player_set)}] cards that sum up to [{sum(item[2] for item in player_set)}]")
+    print(f"Dealer starts with [{len(dealer_set)}] cards that sum up to [{sum(item[2] for item in dealer_set)}]")
+    print(f"{'─'*30}\n")
+
+    input("\t→ Input anything to start: ")
+
+    # play blackjack!
+    while running == True:
+        current_turn += 1
+        # deal dealer's card
+        roll1 = toss()
+        print(f"{'❖'*30}")
+        if roll1 == 0:
+            print(f"Dealer tossed the dice and got a [{roll1}]. He holds...")
+        else:
+            next = generate__random_card(True) # since he hits, he takes the random card
+            print(f"Dealer tossed the dice and got a [{roll1}]. He hits a {next[0]} of {next[1]} and adds it to his deck")
+            dealer_set.append(next)
+            show_sets()
+        print(f"{'❖'*30}\n")
+
+        # deal player's card
+        roll2 = toss()
+        input("\t→ Input anything to toss your dice: ")
+        print(f"{'❖'*30}")
+        if roll2 == 0:
+            print(f"→ You tossed the dice and got a [{roll2}]. You hold...")
+        else:
+            next = generate__random_card(False)
+            print(f"→ You tossed the dice and got a [{roll2}]!\n")
+            if luck >= 2:
+                # Player is lucky, they can view the next card
+                print(f"I'm feeling lucky!! With your luck points being {luck}, you are able to preview the next card before you hit or hold!")
+                print_card(next[0], next[1])
+
+                # player has luck points. they can sabotage the dealer!
+                choice = input("You can chose to hit, or add the card to the dealer's deck.\nInput 1 to hit, anything else to give to the dealer: ")
+                if choice == "1":
+                    # player hits
+                    print(f"→ You hit!")
+                    player_set.append(next)
+                else:
+                    # player gives to dealer
+                    print("→ You gave the card to the dealer.\n")
+                    dealer_set.append(next)
+            else:
+                # not enough luck, play normally
+                print(f"→ You tossed the dice and got a [{roll2}]. You hit a {next[0]} of {next[1]} and add it to your deck")
+                player_set.append(next)
+        print(f"{'❖'*30}\n")
+
+        if current_turn < turns:
+            # we have more turns, loop back
+            print(f"{'─'*30}")
+            print(f"~~~~ End of turn #{current_turn} ~~~~")
+            show_sets()
+            input(f"\t→ Input anything to proceed to turn #{(current_turn+1)}\n")
+        else:
+            running = False
+
+    # win/loss system
+    outcomes = determine_outcome3(goal, player_set, dealer_set)
+    outcome = f"{outcomes[0]} ~ [{outcomes[1]}] luck attribute point(s)"
+    outcome_header(outcome)
+
+    # return the attribute value to reweard or penalize player
+    return outcomes[1]
 ############################# Dice Roll #############################
 def roll_dice():
     roll = (random.randint(1, 10))
